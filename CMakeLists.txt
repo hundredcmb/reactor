@@ -9,15 +9,16 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(TARGET_NAME ${PROJECT_NAME})
 
 add_executable(${TARGET_NAME}
-        ${ROOT_DIR}/echo_server.cpp
+        echo_server.cpp
+        tiny_reactor/include/reactor.h
+        tiny_reactor/source/reactor.cpp
 )
 
 target_include_directories(${TARGET_NAME} PRIVATE
-        ${ROOT_DIR}/inc
+        tiny_reactor/include
 )
 
 target_link_libraries(${TARGET_NAME} PRIVATE
