@@ -3,6 +3,7 @@
 
 namespace lsy {
 typedef int Handle;
+typedef int Events;
 } // lsy
 
 #endif //HANDLE_H

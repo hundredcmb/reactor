@@ -1,6 +1,7 @@
 #ifndef REACTORIMPL_H
 #define REACTORIMPL_H
 
+#include <mutex>
 #include <memory>
 #include <unordered_map>
 
@@ -16,8 +17,15 @@ public:
 
     ~ReactorImpl();
 
+    bool RegistHandler(std::shared_ptr<EventHandler> handler);
+
+    void RemoveHandler(std::shared_ptr<EventHandler> handler);
+
+    void EventLoop();
+
 private:
-    std::unordered_map<Handle, std::unique_ptr<EventHandler>> handlers_;
+    std::mutex handlers_mutex_;
+    std::unordered_map<Handle, std::shared_ptr<EventHandler>> handlers_;
     std::unique_ptr<EventDemultiplexer> event_demultiplexer_;
 };
 } // lsy

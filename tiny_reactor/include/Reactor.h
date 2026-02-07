@@ -5,6 +5,7 @@
 
 namespace lsy {
 class ReactorImpl;
+class EventHandler;
 
 class Reactor {
 public:
@@ -17,6 +18,12 @@ public:
     Reactor(Reactor &&) = delete;
 
     Reactor &operator=(Reactor &&) = delete;
+
+    bool RegistHandler(std::shared_ptr<EventHandler> handler);
+
+    void RemoveHandler(std::shared_ptr<EventHandler> handler);
+
+    void EventLoop();
 
 private:
     Reactor();

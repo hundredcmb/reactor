@@ -13,15 +13,20 @@ set(TARGET_NAME ${PROJECT_NAME})
 
 add_executable(${TARGET_NAME}
         main.cpp
-        tiny_reactor/include/Handle.h
         tiny_reactor/include/Reactor.h
         tiny_reactor/source/Reactor.cpp
         tiny_reactor/include/ReactorImpl.h
         tiny_reactor/source/ReactorImpl.cpp
         tiny_reactor/include/EventDemultiplexer.h
         tiny_reactor/source/EventDemultiplexer.cpp
+
+        tiny_reactor/include/Handle.h
         tiny_reactor/include/EventHandler.h
-        tiny_reactor/source/EventHandler.cpp
+        tiny_reactor/include/ListenHandler.h
+        tiny_reactor/source/ListenHandler.cpp
+        tiny_reactor/include/SockHandler.h
+        tiny_reactor/source/SockHandler.cpp
+        tiny_reactor/include/noncopyable.h
 )
 
 target_include_directories(${TARGET_NAME} PRIVATE
