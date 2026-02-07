@@ -1,7 +1,6 @@
 #include "Reactor.h"
 
 #include "ReactorImpl.h"
-#include "EventHandler.h"
 
 namespace lsy {
 Reactor Reactor::instance_;
@@ -15,12 +14,12 @@ Reactor &Reactor::GetInstance() {
     return instance_;
 }
 
-bool Reactor::RegistHandler(std::shared_ptr<EventHandler> handler) {
-    return impl_->RegistHandler(std::move(handler));
+bool Reactor::RegistHandler(EventHandler *handler) {
+    return impl_->RegistHandler(handler);
 }
 
-void Reactor::RemoveHandler(std::shared_ptr<EventHandler> handler) {
-    return impl_->RemoveHandler(std::move(handler));
+void Reactor::RemoveHandler(EventHandler *handler) {
+    return impl_->RemoveHandler(handler);
 }
 
 void Reactor::EventLoop() {

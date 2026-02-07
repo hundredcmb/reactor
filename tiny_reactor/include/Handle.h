@@ -2,8 +2,8 @@
 #define HANDLE_H
 
 namespace lsy {
-typedef int Handle;
-typedef int Events;
+using Handle = int;
+using Events = unsigned int;
 } // lsy
 
 #endif //HANDLE_H

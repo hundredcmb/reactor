@@ -17,15 +17,15 @@ public:
 
     ~ReactorImpl();
 
-    bool RegistHandler(std::shared_ptr<EventHandler> handler);
+    bool RegistHandler(EventHandler *handler);
 
-    void RemoveHandler(std::shared_ptr<EventHandler> handler);
+    void RemoveHandler(EventHandler *handler);
 
     void EventLoop();
 
 private:
     std::mutex handlers_mutex_;
-    std::unordered_map<Handle, std::shared_ptr<EventHandler>> handlers_;
+    std::unordered_map<Handle, EventHandler *> handlers_;
     std::unique_ptr<EventDemultiplexer> event_demultiplexer_;
 };
 } // lsy

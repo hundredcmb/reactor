@@ -12,20 +12,25 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(TARGET_NAME ${PROJECT_NAME})
 
 add_executable(${TARGET_NAME}
-        main.cpp
+        # 事件循环模块(EventLoop)
         tiny_reactor/include/Reactor.h
         tiny_reactor/source/Reactor.cpp
         tiny_reactor/include/ReactorImpl.h
         tiny_reactor/source/ReactorImpl.cpp
         tiny_reactor/include/EventDemultiplexer.h
-        tiny_reactor/source/EventDemultiplexer.cpp
+        tiny_reactor/include/EpollDemultiplexer.h
+        tiny_reactor/source/EpollDemultiplexer.cpp
 
+        # 事件处理模块(Channel)
         tiny_reactor/include/Handle.h
         tiny_reactor/include/EventHandler.h
         tiny_reactor/include/ListenHandler.h
         tiny_reactor/source/ListenHandler.cpp
         tiny_reactor/include/SockHandler.h
         tiny_reactor/source/SockHandler.cpp
+
+        # 其他
+        main.cpp
         tiny_reactor/include/noncopyable.h
 )
 

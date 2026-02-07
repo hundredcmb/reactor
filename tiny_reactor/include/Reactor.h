@@ -19,9 +19,9 @@ public:
 
     Reactor &operator=(Reactor &&) = delete;
 
-    bool RegistHandler(std::shared_ptr<EventHandler> handler);
+    bool RegistHandler(EventHandler *handler);
 
-    void RemoveHandler(std::shared_ptr<EventHandler> handler);
+    void RemoveHandler(EventHandler *handler);
 
     void EventLoop();
 
