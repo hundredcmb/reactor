@@ -1,9 +1,10 @@
 #ifndef REACTORIMPL_H
 #define REACTORIMPL_H
 
-#include <atomic>
 #include <mutex>
+#include <atomic>
 #include <memory>
+#include <functional>
 #include <unordered_map>
 
 #include "EventHandler.h"
@@ -23,6 +24,8 @@ public:
 
     bool RemoveHandler(EventHandler *handler);
 
+    void RunInLoop(const std::function<void()>& callback);
+
     void EventLoop();
 
     void Quit();
@@ -34,6 +37,9 @@ private:
     EventHandlerList active_handlers_;
     std::atomic_bool quit_;
     std::atomic_bool looping_;
+
+    std::mutex pending_callbacks_mutex_;
+    std::vector<std::function<void()>> pending_callbacks_;
 };
 } // lsy
 

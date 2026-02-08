@@ -1,5 +1,7 @@
 #include "EpollDemultiplexer.h"
 
+#include <cstdio>
+
 extern "C" {
 #include <unistd.h>
 }
@@ -25,12 +27,14 @@ int EpollDemultiplexer::WaitEvent(EventHandlerList &handlers, int timeout_ms) {
         return -1;
     }
     int nfds = ::epoll_wait(epoll_fd_, events_.data(), static_cast<int>(events_.size()), timeout_ms);
-    if (nfds > 0) {
-        for (int i = 0; i < nfds; ++i) {
-            auto *handler = static_cast<EventHandler *>(events_[i].data.ptr);
-            handler->SetRevents(events_[i].events);
-            handlers.emplace_back(handler);
-        }
+    if (nfds < 0) {
+        fprintf(stderr, "EpollDemultiplexer: epoll_wait failed\n");
+        return -1;
+    }
+    for (int i = 0; i < nfds; ++i) {
+        auto *handler = static_cast<EventHandler *>(events_[i].data.ptr);
+        handler->SetRevents(events_[i].events);
+        handlers.emplace_back(handler);
     }
     if (nfds == static_cast<int>(events_.size())) {
         events_.resize(events_.size() * 2);

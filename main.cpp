@@ -8,16 +8,22 @@ extern "C" {
 #include "ListenHandler.h"
 
 int main() {
-    // 自动结束
+    // 设置自动结束
     auto t = std::thread([&]() {
         ::usleep(1000 * 1000 * 100);
         lsy::Reactor::GetInstance().Quit();
     });
 
+    // 开启监听
     lsy::ListenHandler listen_handler(8080);
-    listen_handler.StartListen();
+    if (!listen_handler.StartListen()) {
+        fprintf(stderr, "ListenHandler: start listen failed\n");
+    }
+    if (!lsy::Reactor::GetInstance().RegistHandler(&listen_handler)) {
+        fprintf(stderr, "Reactor: regist handler failed\n");
+    }
 
-    lsy::Reactor::GetInstance().RegistHandler(&listen_handler);
+    // 运行
     lsy::Reactor::GetInstance().EventLoop();
     if (t.joinable()) {
         t.join();

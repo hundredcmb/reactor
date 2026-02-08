@@ -30,4 +30,9 @@ void Reactor::Quit() {
     impl_->Quit();
 }
 
+void Reactor::RunInLoop(const std::function<void()>& callback) {
+    impl_->RunInLoop(callback);
+}
+
+
 } // lsy

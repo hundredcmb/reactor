@@ -10,6 +10,7 @@ extern "C"{
 #include <cstdint>
 #include <string>
 
+namespace lsy {
 class V4Address {
 public:
     V4Address() = default;
@@ -286,5 +287,6 @@ inline sockaddr *V4Address::PSockAddr() {
 inline socklen_t *V4Address::PLen() {
     return &len_;
 }
+} // lsy
 
 #endif  // V4ADDRESS_H

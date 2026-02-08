@@ -1,7 +1,50 @@
 #include "SockHandler.h"
 
+#include "Reactor.h"
+
+extern "C" {
+#include <sys/socket.h>
+}
+
+#include <cstdio>
+
+#include "V4Address.h"
+
 namespace lsy {
+SockHandler::SockHandler(Handle socket_fd, std::shared_ptr<V4Address> peer_addr)
+    : EventHandler(socket_fd),
+      peer_addr_(std::move(peer_addr)),
+      buffer_() {
+}
+
+SockHandler::~SockHandler() = default;
+
 void SockHandler::HandleRead() {
+    ssize_t ret = ::recv(GetHandle(), buffer_, sizeof(buffer_) - 1, 0);
+    if (ret > 0) {
+        printf("SockHandler: recv %zd bytes from '%s'\n", ret, peer_addr_->ToString().c_str());
+        buffer_[ret] = '\0';
+        if (read_callback_) {
+            read_callback_(this, buffer_, ret);
+        }
+    } else if (ret == 0) {
+        printf("SockHandler: peer '%s' closed\n", peer_addr_->ToString().c_str());
+        if (close_callback_) {
+            Reactor::GetInstance().RunInLoop([this]() {
+                close_callback_(this);
+            });
+        }
+    } else {
+        fprintf(stderr, "SockHandler: recv failed\n");
+    }
+}
+
+void SockHandler::SetCloseCallback(CloseFunction callback) {
+    close_callback_ = std::move(callback);
+}
+
+void SockHandler::SetReadCallback(ReadFunction callback) {
+    read_callback_ = std::move(callback);
 }
 
 void SockHandler::HandleWrite() {

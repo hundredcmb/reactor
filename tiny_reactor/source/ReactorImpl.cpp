@@ -64,11 +64,26 @@ void ReactorImpl::EventLoop() {
         }
         if (nfds == 0) {
             printf("WaitEvent: timeout\n");
+        } else {
+            printf("WaitEvent: num=%d\n", nfds);
         }
+
         for (auto *handler: active_handlers_) {
             handler->HandleEvents();
         }
+
+        std::lock_guard<std::mutex> guard(pending_callbacks_mutex_);
+        for (auto &callback : pending_callbacks_) {
+            callback();
+        }
+        pending_callbacks_.clear();
     }
     looping_ = false;
 }
+
+void ReactorImpl::RunInLoop(const std::function<void()>& callback) {
+    std::lock_guard<std::mutex> guard(pending_callbacks_mutex_);
+    pending_callbacks_.emplace_back(callback);
+}
+
 } // lsy

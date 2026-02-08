@@ -2,6 +2,7 @@
 #define REACTOR_H
 
 #include <memory>
+#include <functional>
 
 namespace lsy {
 class ReactorImpl;
@@ -22,6 +23,8 @@ public:
     bool RegistHandler(EventHandler *handler);
 
     bool RemoveHandler(EventHandler *handler);
+
+    void RunInLoop(const std::function<void()>& callback);
 
     void EventLoop();
 
