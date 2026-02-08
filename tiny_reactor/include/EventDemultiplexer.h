@@ -7,8 +7,6 @@
 namespace lsy {
 class EventDemultiplexer : noncopyable {
 public:
-    using EventHandlerList = std::vector<EventHandler *>;
-
     EventDemultiplexer() = default;
 
     virtual ~EventDemultiplexer() = default;

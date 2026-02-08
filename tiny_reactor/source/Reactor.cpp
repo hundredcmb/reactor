@@ -18,7 +18,7 @@ bool Reactor::RegistHandler(EventHandler *handler) {
     return impl_->RegistHandler(handler);
 }
 
-void Reactor::RemoveHandler(EventHandler *handler) {
+bool Reactor::RemoveHandler(EventHandler *handler) {
     return impl_->RemoveHandler(handler);
 }
 
@@ -26,5 +26,8 @@ void Reactor::EventLoop() {
     impl_->EventLoop();
 }
 
+void Reactor::Quit() {
+    impl_->Quit();
+}
 
 } // lsy

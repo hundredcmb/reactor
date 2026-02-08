@@ -1,10 +1,12 @@
 #ifndef REACTORIMPL_H
 #define REACTORIMPL_H
 
+#include <atomic>
 #include <mutex>
 #include <memory>
 #include <unordered_map>
 
+#include "EventHandler.h"
 #include "Handle.h"
 
 namespace lsy {
@@ -19,14 +21,19 @@ public:
 
     bool RegistHandler(EventHandler *handler);
 
-    void RemoveHandler(EventHandler *handler);
+    bool RemoveHandler(EventHandler *handler);
 
     void EventLoop();
+
+    void Quit();
 
 private:
     std::mutex handlers_mutex_;
     std::unordered_map<Handle, EventHandler *> handlers_;
     std::unique_ptr<EventDemultiplexer> event_demultiplexer_;
+    EventHandlerList active_handlers_;
+    std::atomic_bool quit_;
+    std::atomic_bool looping_;
 };
 } // lsy
 

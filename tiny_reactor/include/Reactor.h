@@ -21,9 +21,11 @@ public:
 
     bool RegistHandler(EventHandler *handler);
 
-    void RemoveHandler(EventHandler *handler);
+    bool RemoveHandler(EventHandler *handler);
 
     void EventLoop();
+
+    void Quit();
 
 private:
     Reactor();

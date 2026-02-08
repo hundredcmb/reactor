@@ -3,6 +3,8 @@
 
 #include <poll.h>
 
+#include <vector>
+
 #include "Handle.h"
 #include "noncopyable.h"
 
@@ -51,6 +53,8 @@ private:
     Events events_; // 监听的事件集合
     Events revents_; // 已触发待处理的事件集合
 };
+
+using EventHandlerList = std::vector<EventHandler *>;
 } // lsy
 
 #endif //EVENTHANDLER_H
