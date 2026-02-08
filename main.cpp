@@ -11,6 +11,8 @@ extern "C" {
 
 using namespace lsy;
 
+static constexpr int kEchoServerPort = 8080;
+
 int main() {
     // 设置 1000s 自动退出
     auto t = std::thread([&]() {
@@ -19,7 +21,7 @@ int main() {
     });
 
     // 配置监听
-    ListenHandler listen_handler(8080);
+    ListenHandler listen_handler(kEchoServerPort);
     if (!listen_handler.StartListen()) {
         fprintf(stderr, "ListenHandler: start listen failed\n");
     }
