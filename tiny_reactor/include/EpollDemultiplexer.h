@@ -1,7 +1,9 @@
 #ifndef EPOLLDEMULTIPLEXER_H
 #define EPOLLDEMULTIPLEXER_H
 
+extern "C" {
 #include <sys/epoll.h>
+}
 
 #include <vector>
 

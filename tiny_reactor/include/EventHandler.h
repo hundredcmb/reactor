@@ -1,7 +1,9 @@
 #ifndef EVENTHANDLER_H
 #define EVENTHANDLER_H
 
+extern "C"{
 #include <poll.h>
+}
 
 #include <vector>
 
@@ -19,6 +21,7 @@ public:
     }
 
     Handle GetHandle() const { return fd_; }
+    void SetHandle(Handle fd) { fd_ = fd; }
     Events GetEvents() const { return events_; }
     Events GetRevents() const { return revents_; }
     void EnableRead() { events_ |= kReadEvent; }

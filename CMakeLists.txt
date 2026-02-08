@@ -32,6 +32,7 @@ add_executable(${TARGET_NAME}
         # 其他
         main.cpp
         tiny_reactor/include/noncopyable.h
+        tiny_reactor/include/V4Address.h
 )
 
 target_include_directories(${TARGET_NAME} PRIVATE

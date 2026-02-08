@@ -3,19 +3,26 @@
 
 #include "EventHandler.h"
 
+#include <atomic>
+
 namespace lsy {
 class ListenHandler : public EventHandler {
 public:
-    explicit ListenHandler(Handle listen_fd) : EventHandler(listen_fd) {
-    }
+    explicit ListenHandler(int port);
 
-    ~ListenHandler() override = default;
+    ~ListenHandler() override;
+
+    bool StartListen();
 
     void HandleRead() override;
 
     void HandleWrite() override;
 
     void HandleError() override;
+
+private:
+    int port_;
+    std::atomic_bool listening_;
 };
 } // lsy
 

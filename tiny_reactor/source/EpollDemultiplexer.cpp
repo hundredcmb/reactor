@@ -1,6 +1,9 @@
 #include "EpollDemultiplexer.h"
 
+extern "C" {
 #include <unistd.h>
+}
+
 #include <cstring>
 
 namespace lsy {
