@@ -80,11 +80,15 @@ void ListenHandler::HandleRead() {
         return;
     }
     peer_addr->NetReady();
-    printf("ListenHandler: new connection '%s'\n", peer_addr->ToString().c_str());
 
+    // 创建 SockHandler, 并把业务回调传递进去
     auto sock_handler = std::make_shared<SockHandler>(fd, peer_addr);
     sock_handler->EnableRead();
     sock_handler->SetCloseCallback([this](SockHandler *handler) {
+        // 处理业务: 断开连接
+        disconnect_callback_(this, handler);
+
+        // 移除 handler, 并释放资源
         if (!Reactor::GetInstance().RemoveHandler(handler)) {
             fprintf(stderr, "SockHandler: remove handler failed\n");
         }
@@ -93,18 +97,21 @@ void ListenHandler::HandleRead() {
         ::close(handler->GetHandle());
     });
     sock_handler->SetReadCallback([=](SockHandler* handler, const char *data, size_t size) {
-        printf("SockHandler: send %zd bytes to '%s'\n", size, peer_addr->ToString().c_str());
-        ssize_t ret = ::send(handler->GetHandle(), data, size, 0);
-        if (ret < 0) {
-            fprintf(stderr, "SockHandler: send failed\n");
-        }
+        // 处理业务: 接收到数据
+        message_callback_(this, handler, data, size);
     });
+
+    // 注册 sock_handler 到事件循环
     if (!Reactor::GetInstance().RegistHandler(sock_handler.get())) {
         fprintf(stderr, "ListenHandler: regist handler failed\n");
     }
 
-    std::lock_guard<std::mutex> guard(connections_mutex_);
-    connections_[fd] = std::make_pair(std::move(sock_handler), std::move(peer_addr));
+    std::unique_lock<std::mutex> lock(connections_mutex_);
+    connections_[fd] = sock_handler;
+    lock.unlock();
+
+    // 处理业务: 新连接
+    new_connection_callback_(this, sock_handler.get());
 }
 
 void ListenHandler::HandleWrite() {
@@ -112,4 +119,17 @@ void ListenHandler::HandleWrite() {
 
 void ListenHandler::HandleError() {
 }
+
+void ListenHandler::SetMessageCallback(MessageFunction callback) {
+    message_callback_ = std::move(callback);
+}
+
+void ListenHandler::SetDisConnectCallback(DisConnectFunction callback) {
+    disconnect_callback_ = std::move(callback);
+}
+
+void ListenHandler::SetNewConnectionCallback(NewConnectionFunction callback) {
+    new_connection_callback_ = std::move(callback);
+}
+
 } // lsy

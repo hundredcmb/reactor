@@ -22,13 +22,11 @@ SockHandler::~SockHandler() = default;
 void SockHandler::HandleRead() {
     ssize_t ret = ::recv(GetHandle(), buffer_, sizeof(buffer_) - 1, 0);
     if (ret > 0) {
-        printf("SockHandler: recv %zd bytes from '%s'\n", ret, peer_addr_->ToString().c_str());
         buffer_[ret] = '\0';
         if (read_callback_) {
             read_callback_(this, buffer_, ret);
         }
     } else if (ret == 0) {
-        printf("SockHandler: peer '%s' closed\n", peer_addr_->ToString().c_str());
         if (close_callback_) {
             Reactor::GetInstance().RunInLoop([this]() {
                 close_callback_(this);
@@ -45,6 +43,10 @@ void SockHandler::SetCloseCallback(CloseFunction callback) {
 
 void SockHandler::SetReadCallback(ReadFunction callback) {
     read_callback_ = std::move(callback);
+}
+
+std::shared_ptr<V4Address> SockHandler::GetPeerAddr() const {
+    return peer_addr_;
 }
 
 void SockHandler::HandleWrite() {

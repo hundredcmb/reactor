@@ -24,6 +24,8 @@ public:
      */
     ~SockHandler() override;
 
+    std::shared_ptr<V4Address> GetPeerAddr() const;
+
     /**
      * @brief 设置关闭回调, 涉及资源释放, 要放到事件循环中运行
      */
