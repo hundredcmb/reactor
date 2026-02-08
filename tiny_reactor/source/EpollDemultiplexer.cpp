@@ -53,7 +53,7 @@ int EpollDemultiplexer::Regist(EventHandler *handler) {
 
     struct ::epoll_event event;
     std::memset(&event, 0, sizeof(event));
-    event.events = handler->GetEvents();
+    event.events = handler->GetEvents() | EPOLLET;
     event.data.ptr = handler;
     return ::epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &event);
 }
